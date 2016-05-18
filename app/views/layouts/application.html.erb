@@ -6,6 +6,18 @@
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
 </head>
+
+<!-- NOT SIGNED IN NAV: link to sign-in  -->
+<% if current_user.nil? %>
+<%= link_to "Sign In With Spotify", "/auth/spotify" %>
+<% else %>
+<%= link_to "Sign Out", logout_path, method: :delete %>
+<% end %>
+<!-- NOT SIGNED IN VIEW: Displays Guest and default Spotify artist logo -->
+
+<!-- SIGNED IN NAV: link to signout-->
+<!-- SIGNED IN VIEW: Displays either Spotify account name(uid), or real name(name), and user's Spotify user avatar. -->
+
 <body>
 
 <%= yield %>
