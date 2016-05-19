@@ -21,5 +21,9 @@ class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
 
-  # Add more helper methods to be used by all tests here...
+  # From Jeremy's lecture on testing, I've added it to come back to if I have time: 
+  # OmniAuth.config.test_mode = true
+  # OmniAuth.config.mock_auth[:spotify_known] = OmniAuht:AuthHash.new(
+  # { provider: 'spotify', info: { id: "known_user", display_name: "known_user" }
+  # })
 end
