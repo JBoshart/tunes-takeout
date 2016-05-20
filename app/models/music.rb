@@ -1,26 +1,30 @@
 require 'TunesTakeoutWrapper'
+require 'RSpotify'
 
 class Music < ActiveRecord::Base
 
-  attr_reader :item_id, :type, :name, :url, :image_url
+  attr_reader :id, :uri, :type, :title, :artist, :image_url
 
   def initialize(suggestion_data)
-    @item_id = suggestion_data["item_id"]
-    @type = suggestion_data["type"]
-    @name = suggestion_data["name"]
-    @url = suggestion_data["url"]
-    @image_url = suggestion_data["image_url"]
+    @id = suggestion_data.id
+    @uri = suggestion_data.uri
+    @type = suggestion_data.type
+    @title = suggestion_data.name
+    @artist = suggestion_data.artists[0].name unless suggestion_data.type == "artist"
+    if suggestion_data.type == "album" || suggestion_data.type == "artist"
+      @image_url = suggestion_data.images.first["url"] unless !suggestion_data.images.nil?
+    end
   end
 
   def self.find(suggestion_data)
     if suggestion_data.music_type == "track"
-      suggestion_data = RSpotify::Track.find(suggestion_data.music_id)
+      data = RSpotify::Track.find(suggestion_data.music_id)
     elsif suggestion_data.music_type == "album"
-      suggestion_data = RSpotify::Album.find(suggestion_data.music_id)
+      data = RSpotify::Album.find(suggestion_data.music_id)
     elsif suggestion_data.music_type == "artist"
-      suggestion_data = RSpotify::Artist.find(suggestion_data.music_id)
+      data = RSpotify::Artist.find(suggestion_data.music_id)
     end
 
-    self.new(suggestion_data)
+    self.new(data)
   end
 end

@@ -4,28 +4,29 @@
   <p>List of most popular suggestions goes here.</p>
 
 <% elsif current_user && !params[:food_query].nil? %>
-  <h2>Search results:</h2>
-  <% @food.each do |item| %>
-    <% list = Food.find(item.food_id) %>
-    <%= list.name %>
-  <% end %>
-
-<% elsif current_user && !params[:music_query].nil? %>
-  <h2>Search results:</h2>
-  <% @music.each do |item| %>
-    <% list = Music.find(item) %>
-    <%= list.name %>
-  <% end %>
-<% end %>
-
-<!-- Displays a food recommendation -->
-  <!-- Includes name of the business, linking to appropriate Yelp page -->
-  <!-- Includes address of the business (optional) -->
-  <!-- Includes phone number of the business (optional) -->
-  <!-- Includes photo/logo of the business -->
-
 <!-- Displays a music recommendation -->
-  <!-- Includes name of the music item, linking to appropriate Spotify page -->
-  <!-- Includes type of the music item (artist, album, track, or playlist) -->
-  <!-- Includes photo/album cover of the music item -->
-  <!-- Includes embedded Spotify player if appropriate (optional) -->
+<!-- Includes name of the music item, linking to appropriate Spotify page -->
+<!-- Includes type of the music item (artist, album, track, or playlist) -->
+<!-- Includes photo/album cover of the music item -->
+<!-- Includes embedded Spotify player if appropriate (optional) -->
+  <h2>We find that the following tunes pair well with <%= "#{ params[:food_query] }" %>:</h2>
+    <% n = params[:limit].to_f %>
+    <% @food[0..n-1].each do |item| %>
+    <% list = Music.find(item) %>
+    <%= list.title %>
+    <iframe src="https://embed.spotify.com/?uri=<%= "#{list.uri}" %>" width="250" height="80" frameborder="0" allowtransparency="true"></iframe>
+    <% end %>
+
+<% else current_user && !params[:music_query].nil? %>
+<!-- Displays a food recommendation -->
+<!-- Includes name of the business, linking to appropriate Yelp page -->
+<!-- Includes address of the business (optional) -->
+<!-- Includes phone number of the business (optional) -->
+<!-- Includes photo/logo of the business -->
+  <h2>We find that the following noms pair well with <%= "#{ params[:music_query] }" %>:</h2>
+    <% n = params[:limit].to_f %>
+    <% @music[0..n-1].each do |item| %>
+      <% list = Food.find(item) %>
+      <%= list.name %>
+    <% end %>
+<% end %>
