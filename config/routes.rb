@@ -3,11 +3,9 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'user#index'
+  root 'suggestions#index'
 
-  resources :user, :only => [:new, :index] do
-    resources :suggestions, :only => [:index, :show]
-  end
+  post "/suggestions" => "suggestions#show", as: :suggestions
 
   get "/auth/:provider/callback" => "sessions#create"
   delete "/logout" => "sessions#destroy", as: :logout

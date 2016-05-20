@@ -1,3 +1,5 @@
+require 'TunesTakeoutWrapper'
+
 class Music < ActiveRecord::Base
 
   attr_reader :item_id, :type, :name, :url, :image_url
@@ -11,13 +13,14 @@ class Music < ActiveRecord::Base
   end
 
   def self.find(suggestion_data)
-    if music_type == "track"
-      suggestion_data = RSpotify::Track.find(music_id) #sometimes quotes work here, sometimes they dont....
-    elsif music_type == "album"
-      suggestion_data = RSpotify::Album.find(music_id)
-    elsif music_type == "artist"
-      suggestion_data = RSpotify::Artist.find(music_id)
+    if suggestion_data.music_type == "track"
+      suggestion_data = RSpotify::Track.find(suggestion_data.music_id)
+    elsif suggestion_data.music_type == "album"
+      suggestion_data = RSpotify::Album.find(suggestion_data.music_id)
+    elsif suggestion_data.music_type == "artist"
+      suggestion_data = RSpotify::Artist.find(suggestion_data.music_id)
     end
+
     self.new(suggestion_data)
   end
 end

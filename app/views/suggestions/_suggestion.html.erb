@@ -1,4 +1,22 @@
 <!-- This is the HTML representation of a single suggestion -->
+<% if current_user.nil? || params[:food_query].nil? && params[:music_query].nil? %>
+  <h2>Top 20 Suggestions:</h2>
+  <p>List of most popular suggestions goes here.</p>
+
+<% elsif current_user && !params[:food_query].nil? %>
+  <h2>Search results:</h2>
+  <% @food.each do |item| %>
+    <% list = Food.find(item.food_id) %>
+    <%= list.name %>
+  <% end %>
+
+<% elsif current_user && !params[:music_query].nil? %>
+  <h2>Search results:</h2>
+  <% @music.each do |item| %>
+    <% list = Music.find(item) %>
+    <%= list.name %>
+  <% end %>
+<% end %>
 
 <!-- Displays a food recommendation -->
   <!-- Includes name of the business, linking to appropriate Yelp page -->
