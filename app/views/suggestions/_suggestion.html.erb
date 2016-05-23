@@ -1,32 +1,45 @@
-<!-- This is the HTML representation of a single suggestion -->
-<% if current_user.nil? || params[:food_query].nil? && params[:music_query].nil? %>
-  <h2>Top 20 Suggestions:</h2>
-  <p>List of most popular suggestions goes here.</p>
+<% if current_user && !params[:find_music].nil? %>
+<h2>We find that the following tunes pair well with <%= "#{ params[:find_music] }" %>:</h2>
+<% elsif current_user && !params[:find_food].nil? %>
+<h2>We find that the following noms pair well with <%= "#{ params[:find_food] }" %>:</h2>
+<% end %>
 
-<% elsif current_user && !params[:food_query].nil? %>
-<!-- Displays a music recommendation -->
-<!-- Includes name of the music item, linking to appropriate Spotify page -->
-<!-- Includes type of the music item (artist, album, track, or playlist) -->
-<!-- Includes photo/album cover of the music item -->
-<!-- Includes embedded Spotify player if appropriate (optional) -->
-  <h2>We find that the following tunes pair well with <%= "#{ params[:food_query] }" %>:</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Love it?</th>
+      <th>Listen to this!</th>
+      <th>Title!</th>
+      <th>Type!</th>
+      <th>Eat here!</th>
+      <th>See!</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% if @search_result %>
     <% n = params[:limit].to_f %>
-    <% @food[0..n-1].each do |item| %>
-    <% list = Music.find(item) %>
-    <%= list.title %>
-    <iframe src="https://embed.spotify.com/?uri=<%= "#{list.uri}" %>" width="250" height="80" frameborder="0" allowtransparency="true"></iframe>
-    <% end %>
+    <% @search_result[0..n-1].each do |result| %>
+    <tr>
+      <% if @favorites.include? result[0].id %>
+      <td><%= form_tag unfavorite_path, method: :delete do %>
+          <%= hidden_field_tag :pair_id, result[0].id %>
+          <%= submit_tag "Remove From Favorites" %></td>
+          <% end %>
 
-<% else current_user && !params[:music_query].nil? %>
-<!-- Displays a food recommendation -->
-<!-- Includes name of the business, linking to appropriate Yelp page -->
-<!-- Includes address of the business (optional) -->
-<!-- Includes phone number of the business (optional) -->
-<!-- Includes photo/logo of the business -->
-  <h2>We find that the following noms pair well with <%= "#{ params[:music_query] }" %>:</h2>
-    <% n = params[:limit].to_f %>
-    <% @music[0..n-1].each do |item| %>
-      <% list = Food.find(item) %>
-      <%= list.name %>
+      <% else %>
+      <td><%= form_tag favorite_path, method: :post do %>
+          <%= hidden_field_tag :pair_id, result[0].id %>
+          <%= submit_tag "Mark as Favorite" %></td>
+          <% end %>
+      <% end %>
+
+      <td align="center"><iframe src="https://embed.spotify.com/?uri=<%= "#{result[1].uri}" %>" width="250" height="80" frameborder="0" allowtransparency="true"></iframe></td>
+      <td align="center"><%= link_to "#{result[1].title}", "https://open.spotify.com/#{result[1].type}/#{result[1].id}" %></td>
+      <td align="center"><%= result[1].type %></td>
+      <td align="center"><%= link_to "#{result[2].name}", "#{result[2].url}" %></td>
+      <td align="center"><%= image_tag ("#{result[2].image_url}") %></td>
+    </tr>
     <% end %>
+  </tbody>
+</table>
 <% end %>

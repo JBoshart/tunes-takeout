@@ -1,0 +1,39 @@
+<h2>Top 20 Suggestions:</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Love it?</th>
+      <th>Listen to this!</th>
+      <th>Title!</th>
+      <th>Type!</th>
+      <th>Eat here!</th>
+      <th>See!</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @pairs.each do |pair| %>
+    <tr>
+      <% if current_user && @favorites.include?(pair[0].id) %>
+      <td><%= form_tag unfavorite_path, method: :delete do %>
+          <%= hidden_field_tag :pair_id, pair[0].id %>
+          <%= submit_tag "Remove From Favorites" %></td>
+          <% end %>
+
+      <% elsif current_user %>
+      <td><%= form_tag favorite_path, method: :post do %>
+          <%= hidden_field_tag :pair_id, pair[0].id %>
+          <%= submit_tag "Mark as Favorite" %></td>
+          <% end %>
+      <% else %>
+        <td>Sign in to mark favorites!</td>
+      <% end %>
+
+      <td align="center"><iframe src="https://embed.spotify.com/?uri=<%= "#{pair[1].uri}" %>" width="250" height="80" frameborder="0" allowtransparency="true"></iframe></td>
+      <td align="center"><%= link_to "#{pair[1].title}", "https://open.spotify.com/#{pair[1].type}/#{pair[1].id}" %></td>
+      <td align="center"><%= pair[1].type %></td>
+      <td align="center"><%= link_to "#{pair[2].name}", "#{pair[2].url}" %></td>
+      <td align="center"><%= image_tag ("#{pair[2].image_url}") %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

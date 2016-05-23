@@ -5,10 +5,18 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'suggestions#index'
 
+  get "/suggestions" => "suggestions#index", as: :top
   post "/suggestions" => "suggestions#show", as: :suggestions
 
   get "/auth/:provider/callback" => "sessions#create"
   delete "/logout" => "sessions#destroy", as: :logout
+
+  get "/suggestions/favorites" => "suggestions#favorites", as: :faves
+
+  post "/suggestions/favorites" => "suggestions#favorite", as: :favorite
+  delete "/suggestions/favorites" => "suggestions#unfavorite", as: :unfavorite
+
+
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

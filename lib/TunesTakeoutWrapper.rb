@@ -19,4 +19,43 @@ class TunesTakeoutWrapper
     end
     return suggestions
   end
+
+  def self.find_by_id(suggestion_id)
+    suggestion_data = HTTParty.get(BASE_URL + "/v1/suggestions/#{suggestion_id}")
+
+
+    suggestion = self.new(suggestion_data["suggestion"])
+    return suggestion
+  end
+
+  def self.top
+    suggestion_data = HTTParty.get(BASE_URL + "/v1/suggestions/top?limit=20").parsed_response
+    suggestions = []
+    suggestion_data["suggestions"].each do |single|
+      suggestions << HTTParty.get(BASE_URL + "/v1/suggestions/#{single}").parsed_response
+    end
+
+    pairing_info =[]
+    suggestions.each do |single|
+      pairing_info << self.new(single["suggestion"])
+    end
+    return pairing_info
+  end
+
+  def self.find_favorites(user_id)
+    totes_faves = HTTParty.get(BASE_URL + "/v1/users/#{user_id}/favorites").parsed_response
+
+    favorites = totes_faves["suggestions"]
+    return favorites
+  end
+
+  def self.make_favorite(user_id, suggestion_id)
+    @status = HTTParty.post(BASE_URL + "/v1/users/#{user_id}/favorites", body: { "suggestion": "#{suggestion_id}" }.to_json)
+    return @status
+  end
+
+  def self.hate_favorite(user_id, suggestion_id)
+    @status = HTTParty.delete(BASE_URL + "/v1/users/#{user_id}/favorites", body: { "suggestion": "#{suggestion_id}" }.to_json)
+    return @status
+  end
 end

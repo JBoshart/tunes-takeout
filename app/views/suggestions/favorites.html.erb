@@ -1,2 +1,13 @@
 <!-- Displays _suggestion partials for each suggestion favorited by the logged-in user -->
 <!-- Each _suggestion partial also includes a button/link to unfavorite the suggestion -->
+<h1><%= current_user.name %>'s favorites:</h1>
+<% if @status.nil? %>
+<% elsif @status.code == 201 %>
+The item was successfully added to your favorites!
+<% elsif @status.code == 409 %>
+That item was already in your favorites!
+<% elsif @status.code == 204 %>
+That item has been removed from your favorites!
+<% end %>
+
+<%= render partial: "suggestion" %>

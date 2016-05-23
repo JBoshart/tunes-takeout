@@ -1,34 +1,28 @@
 <!-- Displays _suggestion partials for the top 20 suggestions ranked by number of favorites -->
-<% if current_user.nil? %>
-  <h1>Welcome, guest!</h1>
-  <p>You'll need to log into Spotify to use this application. Click "Sign In With Spotify" above!</p>
-
-  <%= render partial: "suggestion" %>
-
-<% else %>
-
-  <h1>Welcome, <%= current_user.name %>!</h1>
+<% if !current_user.nil? %>
+<h1>Welcome, <%= current_user.name %>!</h1>
 
   <p>Search for pairings:</p>
   <%= form_tag suggestions_path, method: :post do %>
   <%= label_tag :'I am eating...' %>
-  <%= text_field_tag :food_query %>
+  <%= text_field_tag :find_music %>
 
   <%= label_tag :limit %>
   <%= number_field_tag :limit, 20, min: 0, max: 100 %>
 
-  <%= submit_tag 'Find a Music Pairing!'%>
+  <%= submit_tag 'So I should listen to...'%>
   <% end %>
 
   <%= form_tag suggestions_path, method: :post do %>
   <%= label_tag :'I am listening to...' %>
-  <%= text_field_tag :music_query %>
+  <%= text_field_tag :find_food %>
 
   <%= label_tag :limit %>
   <%= number_field_tag :limit, 20, min: 0, max: 100 %>
 
-  <%= submit_tag 'Find a Food Pairing!'%>
+  <%= submit_tag 'So I should eat...'%>
   <% end %>
 
-  <%= render partial: "suggestion" %>
 <% end %>
+
+<%= render partial: "top" %>

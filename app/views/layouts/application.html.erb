@@ -7,18 +7,22 @@
   <%= csrf_meta_tags %>
 </head>
 
-<!-- NOT SIGNED IN NAV: link to sign-in  -->
 <% if current_user.nil? %>
+<%= link_to (image_tag "Spotify_icon_RGB_Black.png"), "/auth/spotify" %>
 <%= link_to "Sign In With Spotify", "/auth/spotify" %>
 <% else %>
+<%= link_to (image_tag current_user.image), "https://www.spotify.com/us/account/overview/" %>
+<%= link_to "#{current_user.name}", "https://www.spotify.com/us/account/overview/" %>
+<%= link_to "Home", root_path %>
+<%= link_to "View My Favorites", faves_path %>
 <%= link_to "Sign Out", logout_path, method: :delete %>
 <% end %>
-<!-- NOT SIGNED IN VIEW: Displays Guest and default Spotify artist logo -->
-
-<!-- SIGNED IN NAV: link to signout-->
-<!-- SIGNED IN VIEW: Displays either Spotify account name(uid), or real name(name), and user's Spotify user avatar. -->
 
 <body>
+<% if current_user.nil? %>
+  <h1>Welcome, guest!</h1>
+  <p>You'll need to log into Spotify to use this application. Click "Sign In With Spotify" above!</p>
+<% end %>
 
 <%= yield %>
 
